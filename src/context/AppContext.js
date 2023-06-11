@@ -1,16 +1,23 @@
 import React, { createContext, useReducer } from 'react';
 
-// 5. The reducer - this is used to update the state, based on the action
+const BUDGET_MAX = 20000;
+
+const getTotalExpenses = (state) => {
+    let total_budget = 0;
+    total_budget = state.expenses.reduce(
+        (previousExp, currentExp) => {
+            return previousExp + currentExp.cost
+        },0
+    );
+    return total_budget;
+}
+
+// 5. The1 reducer - this is used to update the state, based on the action
 export const AppReducer = (state, action) => {
     let budget = 0;
     switch (action.type) {
         case 'ADD_EXPENSE':
-            let total_budget = 0;
-            total_budget = state.expenses.reduce(
-                (previousExp, currentExp) => {
-                    return previousExp + currentExp.cost
-                },0
-            );
+            let total_budget = getTotalExpenses(state);
             total_budget = total_budget + action.payload.cost;
             action.type = "DONE";
             if(total_budget <= state.budget) {
@@ -58,9 +65,19 @@ export const AppReducer = (state, action) => {
                 budget
             };
         case 'SET_BUDGET':
-            action.type = "DONE";
-            state.budget = action.payload;
+            if(action.payload > BUDGET_MAX){
+                action.payload = BUDGET_MAX;
+                alert("Cannot set budget to more than "+state.currency+"20,000");
+            }
 
+            let total_expenses = getTotalExpenses(state);
+            if(action.payload < total_expenses){
+                action.payload = total_expenses;
+                alert("Cannot set budget lower than total expenses "+state.currency+""+total_expenses);
+            }
+
+            state.budget = action.payload;
+            action.type = "DONE";
             return {
                 ...state,
             };
@@ -70,7 +87,7 @@ export const AppReducer = (state, action) => {
             return {
                 ...state
             }
-
+        
         default:
             return state;
     }
@@ -88,6 +105,21 @@ const initialState = {
     ],
     currency: '£'
 };
+
+export const FullCurrencyText = (currencyType) => {
+    switch(currencyType){
+    case '£':
+        return 'Pound';
+    case '€':
+        return 'Euro';
+    case '₹':
+        return 'Ruppee';
+    case '$':    
+        return 'Dollar'
+    default:
+        return 'Dollar';
+    }
+}
 
 // 2. Creates the context this is the thing our components import and use to get the state
 export const AppContext = createContext();

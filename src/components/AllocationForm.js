@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AppContext } from '../context/AppContext';
 
 const AllocationForm = (props) => {
-    const { dispatch,remaining  } = useContext(AppContext);
+    const { dispatch,remaining,currency  } = useContext(AppContext);
 
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
@@ -10,11 +10,17 @@ const AllocationForm = (props) => {
 
     const submitEvent = () => {
 
-            if(cost > remaining) {
-                alert("The value cannot exceed remaining funds  £"+remaining);
-                setCost("");
-                return;
-            }
+        if(!/[0-9]*/.test(cost)){
+            alert("The value entered for cost must be a number!");
+            setCost("");
+            return;        
+        }
+            
+        if(cost > remaining) {
+            alert("The value cannot exceed remaining funds  "+currency+remaining);
+            setCost("");
+            return;
+        }
 
         const expense = {
             name: name,
@@ -32,6 +38,11 @@ const AllocationForm = (props) => {
                 });
             }
     };
+
+    const onKeyEnteredNumberOnly = (event) => {
+        if(!/[0-9]/.test(event.key))
+            event.preventDefault();
+    }
 
     return (
         <div>
@@ -65,6 +76,7 @@ const AllocationForm = (props) => {
                         id='cost'
                         value={cost}
                         style={{ marginLeft: '2rem' , size: 10}}
+                        onKeyPress={onKeyEnteredNumberOnly}
                         onChange={(event) => setCost(event.target.value)}>
                         </input>
 

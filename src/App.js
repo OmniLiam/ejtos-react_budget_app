@@ -1,8 +1,8 @@
-import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { AppProvider } from './context/AppContext';
 import Budget from './components/Budget';
+import CurrencyType from './components/CurrencyType';
 import ExpenseTotal from './components/ExpenseTotal';
 import ExpenseList from './components/ExpenseList';
 import AllocationForm from './components/AllocationForm';
@@ -14,6 +14,9 @@ const App = () => {
             <div className='container'>
                 <h1 className='mt-3'>Company's Budget Allocation</h1>
                 <div className='row mt-3'>
+                    <div className='col-sm'>
+                        <CurrencyType/>
+                    </div>
                     <div className='col-sm'>
                         <Budget />
                     </div>
