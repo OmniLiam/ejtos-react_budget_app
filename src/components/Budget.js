@@ -15,7 +15,7 @@ const Budget = () => {
                 type='number'
                 id='budget'
                 value={budget}
-                style={{ marginLeft: '2rem' , size: 10}}
+                style={{ marginLeft: '5px' , size: 10}}
                 onKeyPress={onKeyEnteredNumberOnly}
                 step="10"
                 onChange={(event) => dispatch({type: "SET_BUDGET", payload: event.target.value})}>
